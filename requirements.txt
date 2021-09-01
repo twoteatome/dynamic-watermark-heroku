@@ -1,0 +1,4 @@
+fastapi
+Pillow
+psycopg2-binary
+uvicorn
