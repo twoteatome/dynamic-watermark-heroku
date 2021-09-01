@@ -52,6 +52,7 @@ app.add_middleware(
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
 cur.execute('CREATE TABLE IF NOT EXISTS m_password (password VARCHAR(50) PRIMARY KEY, username VARCHAR UNIQUE NOT NULL)')
+conn.commit()
 cur.execute('SELECT * FROM m_password')
 rows = cur.fetchall()
 for row in rows:
