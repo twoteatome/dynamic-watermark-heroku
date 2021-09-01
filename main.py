@@ -83,10 +83,10 @@ conn.close()
 urllib.request.urlretrieve(NOTFOUND_URL,"404.jpg")
 
 def remove_file(name: str):
-    print("File " + name + ".png before delete: " + os.path.isfile(name + ".png"))
+    print("File " + name + ".png before delete: " + str(os.path.isfile(name + ".png")))
     os.remove(name + ".png")
     filename.remove(name)
-    print("File " + name + ".png after delete: " + os.path.isfile(name + ".png"))
+    print("File " + name + ".png after delete: " + str(os.path.isfile(name + ".png")))
 
 @app.get("/", response_class=PlainTextResponse)
 def read_root():
