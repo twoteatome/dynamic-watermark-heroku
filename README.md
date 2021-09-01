@@ -1,2 +1,3 @@
-# dynamic-watermark-heroku
+# Dynamic Watermark Heroku
 Dynamic watermark deploy to Heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
