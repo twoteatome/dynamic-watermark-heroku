@@ -79,17 +79,26 @@ def read_item(key: str):
 @app.get("/create", response_class=PlainTextResponse)
 def create_item(key: str, user: str):
     if key == CREATE_TOKEN:
-        password = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=PASSWORD_LENGTH))
-        while password in allData:
+        password = ''
+        for key, value in allData.items():
+            if value == user:
+                password = key
+                break
+                
+        if password == '':
             password = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=PASSWORD_LENGTH))
-        allData[password] = user
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cur = conn.cursor()
-        cur.execute('INSERT INTO m_password (password, username) VALUES (%s, %s)', (password, user))
-        conn.commit()
-        cur.close()
-        conn.close()
-        return "Password cua facebook " + user + " la: " + password
+            while password in allData:
+                password = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=PASSWORD_LENGTH))
+            allData[password] = user
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            cur = conn.cursor()
+            cur.execute('INSERT INTO m_password (password, username) VALUES (%s, %s)', (password, user))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return "Password cua facebook " + user + " la: " + password
+        else:
+            return "Password cua facebook " + user + " la: " + password
     else:
         return "Error !"
     
@@ -115,9 +124,9 @@ def get_item(item_id: str, q: Optional[str] = None):
             tmpname = ''.join(random.sample(string.ascii_lowercase, 10))
         filename.append(tmpname)
             
-        urllib.request.urlretrieve(resourceUrl + item_id, tmpname + ".jpg")
+        urllib.request.urlretrieve(resourceUrl + item_id, tmpname + ".png")
         # --- original image ---
-        original_image = Image.open(tmpname + ".jpg").convert("RGBA")
+        original_image = Image.open(tmpname + ".png").convert("RGBA")
         original_image_size = original_image.size
 
         # calculate text size in pixels (width, height)
@@ -167,9 +176,9 @@ def get_item(item_id: str, q: Optional[str] = None):
             combined_image = Image.alpha_composite(combined_image, watermarks_image)
 
         # --- result ---
-        combined_image.save(tmpname + ".jpg")
-        resdata = 'data:image/jpg;base64,' + base64.b64encode(open(tmpname + ".jpg", "rb").read()).decode('utf-8')
-        os.remove(tmpname + ".jpg")
+        combined_image.save(tmpname + ".png")
+        resdata = 'data:image/png;base64,' + base64.b64encode(open(tmpname + ".png", "rb").read()).decode('utf-8')
+        os.remove(tmpname + ".png")
         filename.remove(tmpname)
         return resdata
     else:
