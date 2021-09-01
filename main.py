@@ -11,7 +11,26 @@ import base64
 import string
 import random
 
-app = FastAPI()
+description = """
+Dynamic Password Watermark API helps you to create, delete and get password of facebook id. 🚀
+
+You will be able to:
+
+* **Create password for user** (Required CREATE_TOKEN as key and facebook id as user, if password of this user existed, it will return password, otherwise create new password).
+* **Delete password** (Required DELETE_TOKEN as key and password as password).
+* **Get password of all user** (Required GET_TOKEN, return all facebook id and password).
+"""
+
+app = FastAPI(
+    title="Dynamic Password Watermark",
+    description=description,
+    version="1.0",
+    license_info={
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+)
+
 allData = {}
 filename = []
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -64,8 +83,10 @@ conn.close()
 urllib.request.urlretrieve(NOTFOUND_URL,"404.jpg")
 
 def remove_file(name: str):
+    print("File " + name + ".png before delete: " + os.path.isfile(name + ".png"))
     os.remove(name + ".png")
     filename.remove(name)
+    print("File " + name + ".png after delete: " + os.path.isfile(name + ".png"))
 
 @app.get("/", response_class=PlainTextResponse)
 def read_root():
@@ -122,7 +143,7 @@ def delete_item(key: str, password: str):
         return "Error !"
 
 @app.get("/image/{item_id:path}")
-async def get_item(item_id: str, q: Optional[str] = None, background_tasks: BackgroundTasks):
+async def get_item(item_id: str, background_tasks: BackgroundTasks, q: Optional[str] = None):
     if q and q in allData:
         tmpname = ''.join(random.sample(string.ascii_lowercase, 10))
         while tmpname in filename:
