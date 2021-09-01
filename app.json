@@ -36,7 +36,7 @@
     },
     "RESOURCE_URL": {
       "description": "Resource url.",
-      "value": "https://smallteaplayground.epizy.com"
+      "value": "https://upload.wikimedia.org/"
     },
     "HOMEPAGE_URL": {
       "description": "Homepage url.",
