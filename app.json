@@ -1,0 +1,70 @@
+{
+  "name": "Password Watermark for Image",
+  "description": "Dynamic watermark for Image",
+  "website": "https://smallteaplayground.epizy.com",
+  "repository": "https://github.com/twoteatome/dynamic-watermark-heroku",
+  "keywords": ["python", "fastapi", "heroku", "postgres"],
+  "success_url": "/",
+  "env": {
+    "CREATE_TOKEN": {
+      "description": "A secret key for creating new password.",
+      "generator": "secret"
+    },
+    "GET_TOKEN": {
+      "description": "A secret key for reading all password.",
+      "generator": "secret"
+    },
+    "DELETE_TOKEN": {
+      "description": "A secret key for deleting password.",
+      "generator": "secret"
+    },
+    "RED_COLOR": {
+      "description": "Red color value in RGB. From 0 to 255.",
+      "value": "255"
+    },
+    "GREEN_COLOR": {
+      "description": "Green color value in RGB. From 0 to 255.",
+      "value": "255"
+    },
+    "BLUE_COLOR": {
+      "description": "Blue color value in RGB. From 0 to 255.",
+      "value": "255"
+    },
+    "NOTFOUND_URL": {
+      "description": "Not found image url.",
+      "value": "https://i1.wp.com/www.ecommerce-nation.com/wp-content/uploads/2018/10/404-error.jpg"
+    },
+    "RESOURCE_URL": {
+      "description": "Resource url.",
+      "value": "https://smallteaplayground.epizy.com"
+    },
+    "HOMEPAGE_URL": {
+      "description": "Homepage url.",
+      "value": "smallteaplayground.epizy.com"
+    },
+    "MAX_WATERMARK": {
+      "description": "Maximum number of watermarks.",
+      "value": "10"
+    },
+    "OPACITY": {
+      "description": "Opacity.",
+      "value": "120"
+    },
+    "TEXT_SIZE": {
+      "description": "Size of text.",
+      "value": "30"
+    },
+    "ROTATE": {
+      "description": "Rotate degree.",
+      "value": "30"
+    },
+    "PASSWORD_LENGTH": {
+      "description": "Length of password. From 0 to 50",
+      "value": "10"
+    }
+  },
+  "image": "heroku/python",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
