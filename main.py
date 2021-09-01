@@ -1,8 +1,9 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import BackgroundTasks, FastAPI
 from fastapi.responses import PlainTextResponse
 from PIL import Image, ImageDraw, ImageFont
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import os
 import psycopg2
 import urllib.request
@@ -62,6 +63,10 @@ conn.close()
 
 urllib.request.urlretrieve(NOTFOUND_URL,"404.jpg")
 
+def remove_file(name: str):
+    os.remove(name + ".png")
+    filename.remove(name)
+
 @app.get("/", response_class=PlainTextResponse)
 def read_root():
     return "Congratulation ! Setup successfully !"
@@ -116,8 +121,8 @@ def delete_item(key: str, password: str):
     else:
         return "Error !"
 
-@app.get("/image/{item_id:path}", response_class=PlainTextResponse)
-def get_item(item_id: str, q: Optional[str] = None):
+@app.get("/image/{item_id:path}")
+async def get_item(item_id: str, q: Optional[str] = None, background_tasks: BackgroundTasks):
     if q and q in allData:
         tmpname = ''.join(random.sample(string.ascii_lowercase, 10))
         while tmpname in filename:
@@ -177,9 +182,7 @@ def get_item(item_id: str, q: Optional[str] = None):
 
         # --- result ---
         combined_image.save(tmpname + ".png")
-        resdata = 'data:image/png;base64,' + base64.b64encode(open(tmpname + ".png", "rb").read()).decode('utf-8')
-        os.remove(tmpname + ".png")
-        filename.remove(tmpname)
-        return resdata
+        background_tasks.add_task(remove_file, tmpname)
+        return FileResponse(tmpname + ".png")
     else:
-        return 'data:image/jpg;base64,' + base64.b64encode(open("404.jpg", "rb").read()).decode('utf-8')
+        return FileResponse("404.jpg")
