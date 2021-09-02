@@ -18,6 +18,14 @@
       "description": "A secret key for deleting password.",
       "generator": "secret"
     },
+    "ADMIN_TOKEN": {
+      "description": "A secret key for admin page login.",
+      "generator": "secret"
+    },
+    "CODE_GENERATE_TOKEN": {
+      "description": "A secret key for generating html code.",
+      "generator": "secret"
+    },
     "RED_COLOR": {
       "description": "Red color value in RGB. From 0 to 255.",
       "value": "255"
@@ -34,32 +42,32 @@
       "description": "Not found image url.",
       "value": "https://i1.wp.com/www.ecommerce-nation.com/wp-content/uploads/2018/10/404-error.jpg"
     },
-    "RESOURCE_URL": {
-      "description": "Resource url.",
-      "value": "https://upload.wikimedia.org/"
+    "HEROKU_APP_NAME": {
+      "description": "Heroku app name.",
+      "value": "localhost"
     },
     "HOMEPAGE_URL": {
       "description": "Homepage url.",
       "value": "smallteaplayground.epizy.com"
     },
     "MAX_WATERMARK": {
-      "description": "Maximum number of watermarks.",
+      "description": "Maximum number of watermarks. Integer value",
       "value": "10"
     },
     "OPACITY": {
-      "description": "Opacity.",
-      "value": "120"
+      "description": "Opacity. Float value, from 0 to 1",
+      "value": "0.03"
     },
-    "TEXT_SIZE": {
-      "description": "Size of text.",
-      "value": "30"
+    "FONT_SCALE": {
+      "description": "Text scale. Float value",
+      "value": "1.0"
     },
-    "ROTATE": {
-      "description": "Rotate degree.",
-      "value": "30"
+    "THICKNESS": {
+      "description": "Thickness of text. Integer value",
+      "value": "1"
     },
     "PASSWORD_LENGTH": {
-      "description": "Length of password. From 0 to 50",
+      "description": "Length of password. Integer value, max value is 50, min value is 10",
       "value": "10"
     }
   },
