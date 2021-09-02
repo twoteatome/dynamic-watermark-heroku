@@ -32,11 +32,11 @@
     },
     "GREEN_COLOR": {
       "description": "Green color value in RGB. From 0 to 255.",
-      "value": "255"
+      "value": "0"
     },
     "BLUE_COLOR": {
       "description": "Blue color value in RGB. From 0 to 255.",
-      "value": "255"
+      "value": "0"
     },
     "NOTFOUND_URL": {
       "description": "Not found image url.",
@@ -55,7 +55,7 @@
     },
     "OPACITY": {
       "description": "Opacity. Float value, from 0 to 1",
-      "value": "0.03"
+      "value": "0.5"
     },
     "FONT_SCALE": {
       "description": "Text scale. Float value",
