@@ -1,5 +1,5 @@
 fastapi
-opencv-python
+opencv-python--headless
 numpy
 psycopg2-binary
 uvicorn
