@@ -47,7 +47,7 @@ MAX_WATERMARK = int(os.environ['MAX_WATERMARK'])
 OPACITY = float(os.environ['OPACITY'])
 FONT_SCALE = float(os.environ['FONT_SCALE'])
 THICKNESS = int(os.environ['THICKNESS'])
-PASSWORD_LENGTH = max(min(int(os.environ['PASSWORD_LENGTH']), 50), 10)
+PASSWORD_LENGTH = max(min(int(os.environ['PASSWORD_LENGTH']), 50), 1)
 
 app = FastAPI(
     title="Dynamic Password Watermark",
