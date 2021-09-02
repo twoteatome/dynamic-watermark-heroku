@@ -3,10 +3,6 @@ from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, status
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
-from fastapi.openapi.utils import get_openapi
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-import secrets
 import cv2
 import random
 import numpy as np
@@ -57,7 +53,7 @@ app = FastAPI(
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     },
-    docs_url=None,
+    docs_url="/" + ADMIN_TOKEN + "/admin",
     redoc_url=None,
     openapi_url=None,
 )
@@ -93,19 +89,6 @@ cur.close()
 conn.close()
 
 urllib.request.urlretrieve(NOTFOUND_URL, "404.jpg")
-security = HTTPBasic()
-
-
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, "admin")
-    correct_password = secrets.compare_digest(credentials.password, ADMIN_TOKEN)
-    if not (correct_username and correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
 
 
 def remove_file(name: str):
@@ -116,11 +99,6 @@ def remove_file(name: str):
 @app.get("/", response_class=PlainTextResponse)
 def read_root():
     return "Congratulation ! Setup successfully !"
-
-
-@app.get("/admin", include_in_schema=False)
-async def get_swagger_documentation(username: str = Depends(get_current_username)):
-    return get_swagger_ui_html(openapi_url="/openapi.json", title="Administrator")
 
 
 @app.get("/get", response_class=PlainTextResponse)
