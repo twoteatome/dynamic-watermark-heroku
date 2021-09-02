@@ -1,5 +1,5 @@
-aiofiles
 fastapi
-Pillow
+opencv-python
+numpy
 psycopg2-binary
 uvicorn
