@@ -53,7 +53,7 @@ app = FastAPI(
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     },
-    docs_url="/" + ADMIN_TOKEN + "/admin",
+    docs_url="/admin",
     redoc_url=None,
     openapi_url=None,
 )
