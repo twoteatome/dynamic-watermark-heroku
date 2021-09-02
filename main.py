@@ -184,8 +184,10 @@ def generate_code(key: str, imgur: str):
 
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cur = conn.cursor()
-        args_str = ','.join(cur.mogrify("%s", (x, )) for x in insertquery)
-        cur.execute("INSERT INTO m_imgur (imageid, link) VALUES " + args_str)
+        sql_insert_query = """ INSERT INTO m_imgur (imageid, link) VALUES (%s,%s) """
+        cur.executemany(sql_insert_query, insertquery)
+#         args_str = ','.join(cur.mogrify("%s", (x, )) for x in insertquery)
+#         cur.execute("INSERT INTO m_imgur (imageid, link) VALUES " + args_str)
         conn.commit()
         cur.close()
         conn.close()
