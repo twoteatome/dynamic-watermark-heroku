@@ -67,7 +67,7 @@
       "value": "1"
     },
     "PASSWORD_LENGTH": {
-      "description": "Length of password. Integer value, max value is 50, min value is 10",
+      "description": "Length of password. Integer value, max value is 50, min value is 1",
       "value": "10"
     }
   },
