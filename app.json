@@ -22,6 +22,10 @@
       "description": "A secret key for admin page login.",
       "generator": "secret"
     },
+    "REFRESH_TOKEN": {
+      "description": "A secret key for admin page login.",
+      "generator": "secret"
+    },
     "CODE_GENERATE_TOKEN": {
       "description": "A secret key for generating html code.",
       "generator": "secret"
