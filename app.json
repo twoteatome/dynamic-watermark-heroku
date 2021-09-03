@@ -23,7 +23,7 @@
       "generator": "secret"
     },
     "REFRESH_TOKEN": {
-      "description": "A secret key for admin page login.",
+      "description": "A secret key for refresh and get newest data from database.",
       "generator": "secret"
     },
     "CODE_GENERATE_TOKEN": {
