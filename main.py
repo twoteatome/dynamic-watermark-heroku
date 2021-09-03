@@ -197,7 +197,7 @@ def delete_item(key: str, password: str):
 
 
 @app.get("/generate", response_class=PlainTextResponse)
-def generate_code(key: str, imgur: str):
+def generate_code(key: str, imgur: str, imagepath: str = "https://" + HEROKU_APP_NAME + ".herokuapp.com/image/"):
     if key == CODE_GENERATE_TOKEN:
         tmplink = ''
         if imgur.endswith('/'):
@@ -213,7 +213,7 @@ def generate_code(key: str, imgur: str):
                 tmpfile.append(m)
 
         insertquery = []
-        codegen = '<!-- Add this code at header (inside <head> tag) <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->'
+        codegen = '<!-- Add this code at header (inside <head> tag) <script src="https://cdn.jsdelivr.net/gh/twoteatome/dynamic-password-watermark-js@main/watermark.js"></script> -->'
         codegen = codegen + '\n\n'
         codegen = codegen + '<div id="dynamic-watermark-container"><input type="password" name="dynamic-watermark-input"><button onclick="handlePassword()">Giải mã</button></div>'
         codegen = codegen + '\n\n\n'
@@ -222,7 +222,7 @@ def generate_code(key: str, imgur: str):
             while tmpname1 in allImage:
                 tmpname1 = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=20))
             allImage[tmpname1] = n[0]
-            codegen = codegen + '<figure class="wp-block-image size-large"><img src="https://' + HEROKU_APP_NAME + '.herokuapp.com/image/' + tmpname1 + '" class="dynamic-watermark-image" alt=""></figure>' + '\n'
+            codegen = codegen + '<figure class="wp-block-image size-large"><img src="' + imagepath + tmpname1 + '" loading="lazy" class="dynamic-watermark-image" alt=""></figure>' + '\n'
             insertquery.append((tmpname1, n[0]))
 
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
