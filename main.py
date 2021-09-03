@@ -20,6 +20,7 @@ You will be able to:
 * **Create password for user** (Required CREATE_TOKEN as key and facebook id as user, if password of this user existed, it will return password, otherwise create new password).
 * **Delete password** (Required DELETE_TOKEN as key and password as password).
 * **Get password of all user** (Required GET_TOKEN, return all facebook id and password).
+* **Refresh to get newest data from database** (Required REFRESH_TOKEN).
 * **Create HTML code for imgur album** (Required CODE_GENERATE_TOKEN).
 """
 
@@ -34,6 +35,7 @@ BLUE_COLOR = int(os.environ['BLUE_COLOR'])
 NOTFOUND_URL = os.environ['NOTFOUND_URL']
 HEROKU_APP_NAME = os.environ['HEROKU_APP_NAME']
 ADMIN_TOKEN = os.environ['ADMIN_TOKEN']
+REFRESH_TOKEN = os.environ['REFRESH_TOKEN']
 HOMEPAGE_URL = os.environ['HOMEPAGE_URL']
 CREATE_TOKEN = os.environ['CREATE_TOKEN']
 CODE_GENERATE_TOKEN = os.environ['CODE_GENERATE_TOKEN']
@@ -53,6 +55,8 @@ app = FastAPI(
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
     },
+    docs_url="/" + ADMIN_TOKEN + "/admin",
+    redoc_url=None
 )
 
 homepageUrl = HOMEPAGE_URL.replace('https://', '').replace('http://', '')
@@ -99,12 +103,45 @@ def read_root():
 
 
 @app.get("/get", response_class=PlainTextResponse)
-def read_item(key: str):
+def read_item(key: str, password: Optional[str] = None, user: Optional[str] = None):
     if key == GET_TOKEN:
         respo = ''
+
+        checpass = ''
+        if password:
+            checpass = password
+
+        checkuser = ''
+        if user:
+            checkuser = user
+
         for key, value in allData.items():
-            respo = respo + key + ', facebook: ' + value["user"] + '\n'
+            if (checpass in key) or (checkuser in value["user"]):
+                respo = respo + key + ', facebook: ' + value["user"] + '\n'
         return respo
+    else:
+        return "Error !"
+
+
+@app.get("/refresh", response_class=PlainTextResponse)
+def refresh_item(key: str):
+    if key == REFRESH_TOKEN:
+        allData = {}
+        allImage = {}
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM m_password')
+        rows = cur.fetchall()
+        for row in rows:
+            (w, h), b = cv2.getTextSize(text=row[0], fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=FONT_SCALE, thickness=THICKNESS)
+            allData[row[0]] = {"user": row[1], "width": w, "height": h, "bound": b}
+        cur.execute('SELECT * FROM m_imgur')
+        rows1 = cur.fetchall()
+        for row1 in rows1:
+            allImage[row1[0]] = row1[1]
+        cur.close()
+        conn.close()
+        return "OK " + str(len(allData)) + ", " + str(len(allImage))
     else:
         return "Error !"
 
@@ -113,6 +150,10 @@ def read_item(key: str):
 def create_item(key: str, user: str):
     if key == CREATE_TOKEN:
         password = ''
+        
+        if user.endswith('/'):
+            user = user[:-1]
+            
         for key, value in allData.items():
             if value["user"] == user:
                 password = key
@@ -172,7 +213,9 @@ def generate_code(key: str, imgur: str):
                 tmpfile.append(m)
 
         insertquery = []
-        codegen = '<div id="dynamic-watermark-container"><input type="password" name="dynamic-watermark-input"><button onclick="handlePassword()">Giải mã</button></div>'
+        codegen = '<!-- Add this code at header (inside <head> tag) <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> -->'
+        codegen = codegen + '\n\n'
+        codegen = codegen + '<div id="dynamic-watermark-container"><input type="password" name="dynamic-watermark-input"><button onclick="handlePassword()">Giải mã</button></div>'
         codegen = codegen + '\n\n\n'
         for n in tmpfile:
             tmpname1 = ''.join(random.choices(string.ascii_uppercase + string.digits + string.ascii_lowercase, k=20))
