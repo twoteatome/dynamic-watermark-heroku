@@ -107,17 +107,18 @@ def read_item(key: str, password: Optional[str] = None, user: Optional[str] = No
     if key == GET_TOKEN:
         respo = ''
 
-        checpass = ''
-        if password:
-            checpass = password
-
-        checkuser = ''
-        if user:
-            checkuser = user
-
-        for key, value in allData.items():
-            if (checpass in key) or (checkuser in value["user"]):
+        if password and user is None:
+            for key, value in allData.items():
+                if password in key:
+                    respo = respo + key + ', facebook: ' + value["user"] + '\n'
+        elif user and password is None:
+            for key, value in allData.items():
+                if user in value["user"]:
+                    respo = respo + key + ', facebook: ' + value["user"] + '\n'
+        else:
+            for key, value in allData.items():
                 respo = respo + key + ', facebook: ' + value["user"] + '\n'
+
         return respo
     else:
         return "Error !"
