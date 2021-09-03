@@ -40,7 +40,7 @@
     },
     "BLUE_COLOR": {
       "description": "Blue color value in RGB. From 0 to 255.",
-      "value": "0"
+      "value": "255"
     },
     "NOTFOUND_URL": {
       "description": "Not found image url.",
