@@ -73,11 +73,11 @@ app.add_middleware(
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
-cur.execute('CREATE TABLE IF NOT EXISTS m_password (password VARCHAR(50) PRIMARY KEY, username VARCHAR UNIQUE NOT NULL)')
+cur.execute('CREATE TABLE IF NOT EXISTS m_password (password VARCHAR(50) PRIMARY KEY, username VARCHAR UNIQUE NOT NULL, available BOOLEAN NOT NULL)')
 conn.commit()
 cur.execute('CREATE TABLE IF NOT EXISTS m_imgur (imageid VARCHAR(50) PRIMARY KEY, link VARCHAR UNIQUE NOT NULL)')
 conn.commit()
-cur.execute('SELECT * FROM m_password')
+cur.execute('SELECT * FROM m_password WHERE available')
 rows = cur.fetchall()
 for row in rows:
     (w, h), b = cv2.getTextSize(text=row[0], fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=FONT_SCALE, thickness=THICKNESS)
@@ -131,7 +131,7 @@ def refresh_item(key: str):
         allImage = {}
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cur = conn.cursor()
-        cur.execute('SELECT * FROM m_password')
+        cur.execute('SELECT * FROM m_password WHERE available')
         rows = cur.fetchall()
         for row in rows:
             (w, h), b = cv2.getTextSize(text=row[0], fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=FONT_SCALE, thickness=THICKNESS)
@@ -168,7 +168,7 @@ def create_item(key: str, user: str):
             allData[password] = {"user": user, "width": w, "height": h, "bound": b}
             conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             cur = conn.cursor()
-            cur.execute('INSERT INTO m_password (password, username) VALUES (%s, %s)', (password, user))
+            cur.execute('INSERT INTO m_password (password, username, available) VALUES (%s, %s, TRUE)', (password, user))
             conn.commit()
             cur.close()
             conn.close()
@@ -188,7 +188,7 @@ def delete_item(key: str, password: str):
         else:
             conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             cur = conn.cursor()
-            cur.execute('DELETE FROM m_password WHERE password = %s', (password))
+            cur.execute('UPDATE m_password SET available = FALSE WHERE password = %s', (password))
             conn.commit()
             cur.close()
             conn.close()
